@@ -16,3 +16,9 @@ dependencies {
     implementation(project(":aws-dynamodb-object-builder"))
     implementation(project(":aws-dynamodb-transforming-serializer"))
 }
+
+tasks {
+    jar {
+        configurations.runtimeClasspath.get().forEach { file -> from(zipTree(file.absoluteFile)) }
+    }
+}

@@ -12,3 +12,9 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
 }
+
+tasks {
+    jar {
+        configurations.runtimeClasspath.get().forEach { file -> from(zipTree(file.absoluteFile)) }
+    }
+}

@@ -14,3 +14,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
     implementation(project(":aws-dynamodb-object-builder"))
 }
+
+tasks {
+    jar {
+        configurations.runtimeClasspath.get().forEach { file -> from(zipTree(file.absoluteFile)) }
+    }
+}
