@@ -1,4 +1,4 @@
-package com.johnturkson.awstools.dynamodb.objectserializer
+package com.johnturkson.awstools.dynamodb.transformingserializer
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor

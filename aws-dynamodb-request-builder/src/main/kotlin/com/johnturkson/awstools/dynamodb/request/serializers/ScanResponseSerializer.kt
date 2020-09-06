@@ -1,7 +1,7 @@
 package com.johnturkson.awstools.dynamodb.request.serializers
 
 import com.johnturkson.awstools.dynamodb.objectbuilder.DynamoDBObject
-import com.johnturkson.awstools.dynamodb.objectserializer.DynamoDBTransformingSerializer
+import com.johnturkson.awstools.dynamodb.transformingserializer.DynamoDBTransformingSerializer
 import com.johnturkson.awstools.dynamodb.request.ScanResponse
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer

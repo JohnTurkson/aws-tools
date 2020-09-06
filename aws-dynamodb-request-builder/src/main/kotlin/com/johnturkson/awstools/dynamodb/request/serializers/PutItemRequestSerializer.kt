@@ -1,6 +1,6 @@
 package com.johnturkson.awstools.dynamodb.request.serializers
 
-import com.johnturkson.awstools.dynamodb.objectserializer.DynamoDBTransformingSerializer
+import com.johnturkson.awstools.dynamodb.transformingserializer.DynamoDBTransformingSerializer
 import com.johnturkson.awstools.dynamodb.request.PutItemRequest
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
