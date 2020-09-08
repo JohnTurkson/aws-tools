@@ -1,20 +1,7 @@
 plugins {
-    kotlin("jvm")
-}
-
-group = "com.johnturkson.aws-tools"
-version = "0.0.1"
-
-repositories {
-    mavenCentral()
+    kotlin("jvm") version "1.4.0"
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
-}
-
-tasks {
-    jar {
-        configurations.runtimeClasspath.get().forEach { file -> from(zipTree(file.absoluteFile)) }
-    }
 }

@@ -1,13 +1,6 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
-}
-
-group = "com.johnturkson.aws-tools"
-version = "0.0.1"
-
-repositories {
-    mavenCentral()
+    kotlin("jvm") version "1.4.0"
+    kotlin("plugin.serialization") version "1.4.0"
 }
 
 dependencies {
@@ -15,10 +8,4 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
     implementation(project(":aws-dynamodb-object-builder"))
     implementation(project(":aws-dynamodb-transforming-serializer"))
-}
-
-tasks {
-    jar {
-        configurations.runtimeClasspath.get().forEach { file -> from(zipTree(file.absoluteFile)) }
-    }
 }
