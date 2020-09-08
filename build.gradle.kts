@@ -27,7 +27,7 @@ subprojects {
         }
         
         publications {
-            register<MavenPublication>("gpr") {
+            register<MavenPublication>("github") {
                 afterEvaluate {
                     from(components["kotlin"])
                 }
