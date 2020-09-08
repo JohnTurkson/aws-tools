@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 @Serializable(with = DynamoDBObjectSerializer::class)
-class DynamoDBObject internal constructor(internal val value: JsonObject)
+data class DynamoDBObject internal constructor(internal val value: JsonObject)
