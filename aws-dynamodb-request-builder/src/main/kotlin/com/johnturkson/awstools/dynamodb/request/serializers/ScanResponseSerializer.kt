@@ -38,8 +38,8 @@ class ScanResponseSerializer<T>(private val dataSerializer: KSerializer<T>) : KS
         val count = response["Count"]!!.jsonPrimitive.int
         val scannedCount = response["ScannedCount"]!!.jsonPrimitive.int
         val lastEvaluatedKey = json.decodeFromJsonElement(
-            DynamoDBObject.serializer(),
-            response["LastEvaluatedKey"]!!.jsonObject
+            DynamoDBObject.serializer().nullable,
+            response["LastEvaluatedKey"]?.jsonObject ?: JsonNull
         )
         return ScanResponse(count, items, scannedCount, lastEvaluatedKey)
     }
