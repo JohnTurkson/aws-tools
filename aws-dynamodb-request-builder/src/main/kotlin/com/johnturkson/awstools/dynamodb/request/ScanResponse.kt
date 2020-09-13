@@ -14,5 +14,5 @@ data class ScanResponse<T>(
     @SerialName("ScannedCount")
     val scannedCount: Int,
     @SerialName("LastEvaluatedKey")
-    val lastEvaluatedKey: DynamoDBObject,
+    val lastEvaluatedKey: DynamoDBObject? = null,
 )

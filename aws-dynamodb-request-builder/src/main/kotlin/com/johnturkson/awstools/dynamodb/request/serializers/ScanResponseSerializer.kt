@@ -1,10 +1,11 @@
 package com.johnturkson.awstools.dynamodb.request.serializers
 
 import com.johnturkson.awstools.dynamodb.objectbuilder.DynamoDBObject
-import com.johnturkson.awstools.dynamodb.transformingserializer.DynamoDBTransformingSerializer
 import com.johnturkson.awstools.dynamodb.request.ScanResponse
+import com.johnturkson.awstools.dynamodb.transformingserializer.DynamoDBTransformingSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
@@ -19,7 +20,7 @@ class ScanResponseSerializer<T>(private val dataSerializer: KSerializer<T>) : KS
         val items = json.encodeToJsonElement(ListSerializer(transformer), value.items)
         val count = JsonPrimitive(value.count)
         val scannedCount = JsonPrimitive(value.scannedCount)
-        val lastEvaluatedKey = json.encodeToJsonElement(DynamoDBObject.serializer(), value.lastEvaluatedKey)
+        val lastEvaluatedKey = json.encodeToJsonElement(DynamoDBObject.serializer().nullable, value.lastEvaluatedKey)
         val response = JsonObject(mapOf(
             "Count" to count,
             "Items" to items,
