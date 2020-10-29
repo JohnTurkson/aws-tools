@@ -33,7 +33,7 @@ class DynamoDBListBuilder {
     }
     
     fun add(value: DynamoDBObject): DynamoDBListBuilder {
-        elements += value.value
+        elements += JsonObject(mapOf("M" to value.value))
         return this
     }
     

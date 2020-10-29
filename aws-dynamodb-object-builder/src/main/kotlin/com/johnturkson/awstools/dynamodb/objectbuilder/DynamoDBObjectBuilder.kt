@@ -33,7 +33,7 @@ class DynamoDBObjectBuilder {
     }
     
     fun put(name: String, value: DynamoDBObject): DynamoDBObjectBuilder {
-        attributes += name to value.value
+        attributes += name to JsonObject(mapOf("M" to value.value))
         return this
     }
     
