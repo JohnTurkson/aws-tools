@@ -12,6 +12,7 @@ class DynamoDBTransformingSerializer<T>(private val dataSerializer: KSerializer<
     private val BOOLEAN = "BOOL"
     private val NUMBER = "N"
     private val LIST = "L"
+    private val MAP = "M"
     private val types = listOf(NULL, STRING, BOOLEAN, NUMBER, LIST)
     
     override val descriptor: SerialDescriptor = dataSerializer.descriptor
@@ -52,7 +53,7 @@ class DynamoDBTransformingSerializer<T>(private val dataSerializer: KSerializer<
         return if (name in types) {
             this
         } else {
-            JsonObject(this.mapValues { (name, value) -> value.encoded(name) })
+            JsonObject(mapOf(MAP to JsonObject(this.mapValues { (name, value) -> value.encoded(name) })))
         }
     }
     
