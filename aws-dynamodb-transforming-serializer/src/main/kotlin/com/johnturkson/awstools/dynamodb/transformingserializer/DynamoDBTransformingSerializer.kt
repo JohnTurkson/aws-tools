@@ -100,7 +100,7 @@ class DynamoDBTransformingSerializer<T>(private val dataSerializer: KSerializer<
         return when (key) {
             LIST -> this.decoded()
             MAP -> this.decoded()
-            else -> throw Exception("Unsupported data type")
+            else -> JsonObject(mapOf(key to this.decoded()))
         }
     }
     
