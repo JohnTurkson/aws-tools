@@ -13,8 +13,10 @@ data class ScanRequest<T>(
     val limit: Int? = null,
     @SerialName("ExclusiveStartKey")
     val exclusiveStartKey: DynamoDBObject? = null,
-    @SerialName("ScanFilter")
-    val scanFilter: DynamoDBObject? = null,
+    @SerialName("ExpressionAttributeNames")
+    val expressionAttributeNames: DynamoDBObject? = null,
+    @SerialName("ExpressionAttributeValues")
+    val expressionAttributeValues: DynamoDBObject? = null,
     @SerialName("ProjectionExpression")
     val projectionExpression: ProjectionExpression? = null,
     @SerialName("FilterExpression")
