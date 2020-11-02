@@ -9,6 +9,8 @@ import kotlinx.serialization.Serializable
 data class QueryRequest<T>(
     @SerialName("TableName")
     val tableName: String,
+    @SerialName("IndexName")
+    val indexName: String? = null,
     @SerialName("Limit")
     val limit: Int? = null,
     @SerialName("KeyConditionExpression")
