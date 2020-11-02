@@ -16,7 +16,7 @@ data class QueryRequest<T>(
     @SerialName("ExclusiveStartKey")
     val exclusiveStartKey: DynamoDBObject? = null,
     @SerialName("ExpressionAttributeNames")
-    val expressionAttributeNames: DynamoDBObject? = null,
+    val expressionAttributeNames: Map<String, String>? = null,
     @SerialName("ExpressionAttributeValues")
     val expressionAttributeValues: DynamoDBObject? = null,
     @SerialName("ProjectionExpression")
