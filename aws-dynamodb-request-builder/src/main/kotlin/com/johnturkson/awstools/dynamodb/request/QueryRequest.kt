@@ -27,4 +27,6 @@ data class QueryRequest<T>(
     val filterExpression: String? = null,
     @SerialName("ConsistentRead")
     val consistentRead: Boolean? = null,
+    @SerialName("ScanIndexForward")
+    val scanIndexForward: Boolean? = null,
 )
