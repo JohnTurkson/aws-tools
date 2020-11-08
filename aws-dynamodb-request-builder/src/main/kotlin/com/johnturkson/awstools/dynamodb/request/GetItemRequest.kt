@@ -11,6 +11,8 @@ data class GetItemRequest<T>(
     val tableName: String,
     @SerialName("Key")
     val key: DynamoDBObject,
+    @SerialName("ExpressionAttributeNames")
+    val expressionAttributeNames: Map<String, String>? = null,
     @SerialName("ProjectionExpression")
     val projectionExpression: ProjectionExpression? = null,
     @SerialName("ConsistentRead")
