@@ -18,7 +18,7 @@ class DynamoDBObjectBuilder {
     }
     
     fun put(name: String, value: Number): DynamoDBObjectBuilder {
-        attributes += name to JsonObject(mapOf("N" to JsonPrimitive(value)))
+        attributes += name to JsonObject(mapOf("N" to JsonPrimitive(value.toString())))
         return this
     }
     
