@@ -15,7 +15,6 @@ data class QueryRequest<T>(
     val limit: Int? = null,
     @SerialName("KeyConditionExpression")
     val keyConditionExpression: String,
-    // TODO change to T
     @SerialName("ExclusiveStartKey")
     val exclusiveStartKey: DynamoDBObject? = null,
     @SerialName("ExpressionAttributeNames")
