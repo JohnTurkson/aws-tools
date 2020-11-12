@@ -15,13 +15,12 @@ class DynamoDBRequestHandler(
     override val client: HttpClient,
     private val serializer: Json,
 ) : AWSRequestHandler {
-    suspend fun <T, R> query(
+    suspend fun <T> query(
         request: QueryRequest<T>,
-        requestSerializer: KSerializer<T>,
-        responseSerializer: KSerializer<R>,
+        responseSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
-    ): QueryResponse<R> {
-        val body = serializer.encodeToString(QueryRequest.serializer(requestSerializer), request)
+    ): QueryResponse<T> {
+        val body = serializer.encodeToString(QueryRequest.serializer(responseSerializer), request)
         val targetHeaders = listOf(Header("X-Amz-Target", "DynamoDB_20120810.Query"))
         val credentialHeaders = when (val sessionToken = credentials.sessionToken) {
             null -> emptyList()
