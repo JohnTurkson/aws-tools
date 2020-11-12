@@ -1,4 +1,4 @@
-package com.johnturkson.awstools.signer
+package com.johnturkson.awstools.requestsigner
 
 import java.net.URL
 import java.security.MessageDigest
