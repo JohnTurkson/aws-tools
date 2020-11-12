@@ -78,20 +78,11 @@ class DynamoDBRequestHandler(
     ): R {
         val body = serializer.encodeToString(requestSerializer, request)
         val targetHeaders = generateTargetHeaders(target)
-        val credentialHeaders = generateCredentialHeaders(credentials)
-        val combinedHeaders = headers + targetHeaders + credentialHeaders
-        val response = request(body, combinedHeaders)
+        val response = request(body, headers + targetHeaders)
         return serializer.decodeFromString(responseSerializer, response)
     }
     
     private fun generateTargetHeaders(target: String): List<Header> {
         return listOf(Header("X-Amz-Target", target))
-    }
-    
-    private fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
-        return when (val sessionToken = credentials.sessionToken) {
-            null -> emptyList()
-            else -> listOf(Header("X-Amz-Security-Token", sessionToken))
-        }
     }
 }

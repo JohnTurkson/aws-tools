@@ -17,6 +17,8 @@ interface AWSRequestHandler {
     val client: HttpClient
     
     suspend fun request(body: String, headers: List<Header>): String {
+        val credentialHeaders = generateCredentialHeaders(credentials)
+        val combinedHeaders = headers + credentialHeaders
         val signedHeaders = AWSRequestSigner.generateRequestHeaders(
             credentials.accessKeyId,
             credentials.secretKey,
@@ -25,7 +27,7 @@ interface AWSRequestHandler {
             configuration.method,
             configuration.url,
             body,
-            headers,
+            combinedHeaders,
         )
         val response = client.request<HttpResponse>(configuration.url) {
             this.body = TextContent(body, ContentType.Application.Json)
@@ -35,5 +37,12 @@ interface AWSRequestHandler {
             }
         }
         return response.readText()
+    }
+    
+    private fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
+        return when (val sessionToken = credentials.sessionToken) {
+            null -> emptyList()
+            else -> listOf(Header("X-Amz-Security-Token", sessionToken))
+        }
     }
 }
