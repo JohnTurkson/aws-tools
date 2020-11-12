@@ -7,7 +7,9 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readText
+import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
+import io.ktor.http.content.TextContent
 
 interface AWSRequestHandler {
     val credentials: AWSCredentials
@@ -25,8 +27,8 @@ interface AWSRequestHandler {
             body,
             headers,
         )
-        val response = client.request<HttpResponse> {
-            this.body = body
+        val response = client.request<HttpResponse>(configuration.url) {
+            this.body = TextContent(body, ContentType.Application.Json)
             this.method = HttpMethod.parse(configuration.method)
             headers {
                 signedHeaders.forEach { (name, value) -> append(name, value) }
