@@ -16,7 +16,7 @@ interface AWSRequestHandler {
     val configuration: AWSServiceConfiguration
     val client: HttpClient
     
-    suspend fun request(body: String, headers: List<Header>): String {
+    suspend fun request(body: String, headers: List<Header> = emptyList()): String {
         val credentialHeaders = generateCredentialHeaders(credentials)
         val combinedHeaders = headers + credentialHeaders
         val signedHeaders = AWSRequestSigner.generateRequestHeaders(
