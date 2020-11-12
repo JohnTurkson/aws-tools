@@ -3,4 +3,4 @@ package com.johnturkson.awstools.dynamodb.request
 import kotlinx.serialization.Serializable
 
 @Serializable
-object PutItemResponse
+class PutItemResponse<T>
