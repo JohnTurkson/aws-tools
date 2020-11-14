@@ -10,4 +10,12 @@ data class DeleteItemRequest<T>(
     val tableName: String,
     @SerialName("Key")
     val key: DynamoDBObject,
+    @SerialName("ReturnValues")
+    val returnValues: String? = null,
+    @SerialName("ConditionExpression")
+    val conditionExpression: String? = null,
+    @SerialName("ExpressionAttributeNames")
+    val expressionAttributeNames: Map<String, String>? = null,
+    @SerialName("ExpressionAttributeValues")
+    val expressionAttributeValues: DynamoDBObject? = null,
 )
