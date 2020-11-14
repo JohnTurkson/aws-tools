@@ -1,8 +1,8 @@
-package com.johnturkson.awstools.dynamodb.request.serializers
+package com.johnturkson.awstools.dynamodb.requestbuilder.serializers
 
 import com.johnturkson.awstools.dynamodb.objectbuilder.DynamoDBObject
 import com.johnturkson.awstools.dynamodb.transformingserializer.DynamoDBTransformingSerializer
-import com.johnturkson.awstools.dynamodb.request.PutItemRequest
+import com.johnturkson.awstools.dynamodb.requestbuilder.requests.PutItemRequest
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.nullable

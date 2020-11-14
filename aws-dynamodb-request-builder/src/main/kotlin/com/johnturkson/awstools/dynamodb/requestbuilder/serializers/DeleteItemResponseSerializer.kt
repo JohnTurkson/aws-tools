@@ -1,6 +1,6 @@
-package com.johnturkson.awstools.dynamodb.request.serializers
+package com.johnturkson.awstools.dynamodb.requestbuilder.serializers
 
-import com.johnturkson.awstools.dynamodb.request.PutItemResponse
+import com.johnturkson.awstools.dynamodb.requestbuilder.responses.DeleteItemResponse
 import com.johnturkson.awstools.dynamodb.transformingserializer.DynamoDBTransformingSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -11,10 +11,10 @@ import kotlinx.serialization.json.JsonEncoder
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 
-class PutItemResponseSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<PutItemResponse<T>> {
+class DeleteItemResponseSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<DeleteItemResponse<T>> {
     override val descriptor: SerialDescriptor = dataSerializer.descriptor
     
-    override fun serialize(encoder: Encoder, value: PutItemResponse<T>) {
+    override fun serialize(encoder: Encoder, value: DeleteItemResponse<T>) {
         val transformer = DynamoDBTransformingSerializer(dataSerializer)
         val json = (encoder as JsonEncoder).json
         val item = when (value.item) {
@@ -25,7 +25,7 @@ class PutItemResponseSerializer<T>(private val dataSerializer: KSerializer<T>) :
         encoder.encodeJsonElement(response)
     }
     
-    override fun deserialize(decoder: Decoder): PutItemResponse<T> {
+    override fun deserialize(decoder: Decoder): DeleteItemResponse<T> {
         val transformer = DynamoDBTransformingSerializer(dataSerializer)
         val json = (decoder as JsonDecoder).json
         val response = decoder.decodeJsonElement() as JsonObject
@@ -33,6 +33,6 @@ class PutItemResponseSerializer<T>(private val dataSerializer: KSerializer<T>) :
             null -> null
             else -> json.decodeFromJsonElement(transformer, response["Attributes"]!!)
         }
-        return PutItemResponse(item)
+        return DeleteItemResponse(item)
     }
 }

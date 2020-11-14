@@ -1,7 +1,7 @@
-package com.johnturkson.awstools.dynamodb.request
+package com.johnturkson.awstools.dynamodb.requestbuilder.requests
 
 import com.johnturkson.awstools.dynamodb.objectbuilder.DynamoDBObject
-import com.johnturkson.awstools.dynamodb.request.components.ProjectionExpression
+import com.johnturkson.awstools.dynamodb.requestbuilder.components.ProjectionExpression
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

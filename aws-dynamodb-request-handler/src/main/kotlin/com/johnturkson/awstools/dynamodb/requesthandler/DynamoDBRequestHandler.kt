@@ -1,6 +1,7 @@
 package com.johnturkson.awstools.dynamodb.requesthandler
 
-import com.johnturkson.awstools.dynamodb.request.*
+import com.johnturkson.awstools.dynamodb.requestbuilder.requests.*
+import com.johnturkson.awstools.dynamodb.requestbuilder.responses.*
 import com.johnturkson.awstools.requesthandler.AWSCredentials
 import com.johnturkson.awstools.requesthandler.AWSRequestHandler
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header

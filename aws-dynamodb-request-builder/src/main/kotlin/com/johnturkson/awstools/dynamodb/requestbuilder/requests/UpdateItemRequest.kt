@@ -1,12 +1,12 @@
-package com.johnturkson.awstools.dynamodb.request
+package com.johnturkson.awstools.dynamodb.requestbuilder.requests
 
 import com.johnturkson.awstools.dynamodb.objectbuilder.DynamoDBObject
-import com.johnturkson.awstools.dynamodb.request.serializers.PutItemRequestSerializer
+import com.johnturkson.awstools.dynamodb.requestbuilder.serializers.UpdateItemRequestSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable(with = PutItemRequestSerializer::class)
-data class PutItemRequest<T>(
+@Serializable(with = UpdateItemRequestSerializer::class)
+data class UpdateItemRequest<T>(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("Item")

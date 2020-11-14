@@ -1,6 +1,6 @@
-package com.johnturkson.awstools.dynamodb.request
+package com.johnturkson.awstools.dynamodb.requestbuilder.responses
 
-import com.johnturkson.awstools.dynamodb.request.serializers.UpdateItemResponseSerializer
+import com.johnturkson.awstools.dynamodb.requestbuilder.serializers.UpdateItemResponseSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

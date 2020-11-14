@@ -1,6 +1,6 @@
-package com.johnturkson.awstools.dynamodb.request.serializers
+package com.johnturkson.awstools.dynamodb.requestbuilder.serializers
 
-import com.johnturkson.awstools.dynamodb.request.components.ProjectionExpression
+import com.johnturkson.awstools.dynamodb.requestbuilder.components.ProjectionExpression
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
