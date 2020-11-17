@@ -62,6 +62,15 @@ subprojects {
                     password = System.getenv("SPACE_PUBLISHING_TOKEN")
                 }
             }
+            
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/johnturkson/aws-tools")
+                credentials {
+                    username = System.getenv("GITHUB_PUBLISHING_USERNAME")
+                    password = System.getenv("GITHUB_PUBLISHING_TOKEN")
+                }
+            }
         }
     }
 }
