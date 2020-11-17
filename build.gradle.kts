@@ -56,7 +56,7 @@ subprojects {
         repositories {
             maven {
                 name = "SpacePackages"
-                url = uri("https://maven.pkg.jetbrains.space/johnturkson/p/packages/maven")
+                url = uri("https://maven.pkg.jetbrains.space/johnturkson/p/packages/public")
                 credentials {
                     username = System.getenv("SPACE_PUBLISHING_USERNAME")
                     password = System.getenv("SPACE_PUBLISHING_TOKEN")
