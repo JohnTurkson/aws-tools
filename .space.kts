@@ -6,7 +6,7 @@ job("Publish artifacts") {
         env["GITHUB_PUBLISHING_TOKEN"] = Secrets("github-publishing-token")
         
         kotlinScript { api ->
-            if (api.gitBranch() == "refs/heads/main") {
+            if (api.gitBranch() == "refs/heads/releases") {
                 api.gradlew("build")
                 api.gradlew("publish")
             }
