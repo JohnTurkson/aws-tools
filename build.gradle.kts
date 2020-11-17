@@ -17,30 +17,49 @@ subprojects {
     apply(plugin = "maven-publish")
     
     publishing {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/johnturkson/aws-tools")
-                credentials {
-                    username = System.getenv("GITHUB_USERNAME")
-                    password = System.getenv("GITHUB_TOKEN")
+        publications {
+            create<MavenPublication>("maven") {
+                pom {
+                    name.set(project.name)
+                    description.set("Kotlin-first utilities and tools for interacting with various AWS services without requiring the AWS SDK.")
+                    url.set("https://www.github.com/JohnTurkson/aws-tools")
+                    
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    
+                    developers {
+                        developer {
+                            id.set("JohnTurkson")
+                            name.set("John Turkson")
+                            email.set("johnturkson@johnturkson.com")
+                            url.set("https://www.johnturkson.com")
+                        }
+                    }
+                    
+                    scm {
+                        connection.set("scm:git:git://github.com/JohnTurkson/aws-tools.git")
+                        developerConnection.set("scm:git:ssh://git.jetbrains.space/johnturkson/aws/aws-tools.git")
+                        url.set("https://github.com/JohnTurkson/aws-tools")
+                    }
                 }
-            }
-            
-            maven {
-                name = "SpacePackages"
-                url = uri("https://maven.pkg.jetbrains.space/johnturkson/p/aws/aws-tools")
-                credentials {
-                    username = System.getenv("SPACE_USERNAME")
-                    password = System.getenv("SPACE_TOKEN")
+                
+                afterEvaluate {
+                    from(components["kotlin"])
                 }
             }
         }
         
-        publications {
-            create<MavenPublication>("maven") {
-                afterEvaluate {
-                    from(components["kotlin"])
+        repositories {
+            maven {
+                name = "SpacePackages"
+                url = uri("https://maven.pkg.jetbrains.space/johnturkson/p/packages/maven")
+                credentials {
+                    username = System.getenv("SPACE_PUBLISHING_USERNAME")
+                    password = System.getenv("SPACE_PUBLISHING_TOKEN")
                 }
             }
         }
