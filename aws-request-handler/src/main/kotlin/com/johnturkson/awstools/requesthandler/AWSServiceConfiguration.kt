@@ -1,8 +1,10 @@
 package com.johnturkson.awstools.requesthandler
 
-interface AWSServiceConfiguration {
-    val service: String
-    val region: String
-    val url: String
-    val method: String
-}
+open class AWSServiceConfiguration(
+    open val region: String,
+    open val path: String,
+    open val service: String,
+    open val endpoint: String,
+    open val url: String,
+    open val method: String,
+)

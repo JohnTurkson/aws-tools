@@ -12,11 +12,14 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 
 interface AWSRequestHandler {
-    val credentials: AWSCredentials
-    val configuration: AWSServiceConfiguration
     val client: HttpClient
     
-    suspend fun request(body: String, headers: List<Header> = emptyList()): String {
+    suspend fun request(
+        credentials: AWSCredentials,
+        configuration: AWSServiceConfiguration,
+        body: String,
+        headers: List<Header> = emptyList(),
+    ): String {
         val credentialHeaders = generateCredentialHeaders(credentials)
         val combinedHeaders = headers + credentialHeaders
         val signedHeaders = AWSRequestSigner.generateRequestHeaders(
