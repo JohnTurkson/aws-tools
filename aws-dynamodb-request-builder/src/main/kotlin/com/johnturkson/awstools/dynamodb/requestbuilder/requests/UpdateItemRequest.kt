@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateItemRequest<T>(
+data class UpdateItemRequest(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("Key")

@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DeleteItemRequest<T>(
+data class DeleteItemRequest(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("Key")

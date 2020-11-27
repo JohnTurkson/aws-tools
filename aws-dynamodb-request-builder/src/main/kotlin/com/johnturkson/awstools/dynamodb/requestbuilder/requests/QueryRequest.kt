@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class QueryRequest<T>(
+data class QueryRequest(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("IndexName")

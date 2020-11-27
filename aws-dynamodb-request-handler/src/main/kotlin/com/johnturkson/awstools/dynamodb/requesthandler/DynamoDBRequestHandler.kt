@@ -16,13 +16,13 @@ class DynamoDBRequestHandler(
     private val serializer: Json,
 ) : AWSRequestHandler {
     suspend fun <T> getItem(
-        request: GetItemRequest<T>,
+        request: GetItemRequest,
         typeSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
     ): GetItemResponse<T> {
         val target = "DynamoDB_20120810.GetItem"
         val configuration = DynamoDBConfiguration(region)
-        val requestSerializer = GetItemRequest.serializer(typeSerializer)
+        val requestSerializer = GetItemRequest.serializer()
         val responseSerializer = GetItemResponse.serializer(typeSerializer)
         return request(configuration, request, headers, target, requestSerializer, responseSerializer)
     }
@@ -40,49 +40,49 @@ class DynamoDBRequestHandler(
     }
     
     suspend fun <T> updateItem(
-        request: UpdateItemRequest<T>,
+        request: UpdateItemRequest,
         typeSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
     ): UpdateItemResponse<T> {
         val target = "DynamoDB_20120810.UpdateItem"
         val configuration = DynamoDBConfiguration(region)
-        val requestSerializer = UpdateItemRequest.serializer(typeSerializer)
+        val requestSerializer = UpdateItemRequest.serializer()
         val responseSerializer = UpdateItemResponse.serializer(typeSerializer)
         return request(configuration, request, headers, target, requestSerializer, responseSerializer)
     }
     
     suspend fun <T> deleteItem(
-        request: DeleteItemRequest<T>,
+        request: DeleteItemRequest,
         typeSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
     ): DeleteItemResponse<T> {
         val target = "DynamoDB_20120810.DeleteItem"
         val configuration = DynamoDBConfiguration(region)
-        val requestSerializer = DeleteItemRequest.serializer(typeSerializer)
+        val requestSerializer = DeleteItemRequest.serializer()
         val responseSerializer = DeleteItemResponse.serializer(typeSerializer)
         return request(configuration, request, headers, target, requestSerializer, responseSerializer)
     }
     
     suspend fun <T> query(
-        request: QueryRequest<T>,
+        request: QueryRequest,
         typeSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
     ): QueryResponse<T> {
         val target = "DynamoDB_20120810.Query"
         val configuration = DynamoDBConfiguration(region)
-        val requestSerializer = QueryRequest.serializer(typeSerializer)
+        val requestSerializer = QueryRequest.serializer()
         val responseSerializer = QueryResponse.serializer(typeSerializer)
         return request(configuration, request, headers, target, requestSerializer, responseSerializer)
     }
     
     suspend fun <T> scan(
-        request: ScanRequest<T>,
+        request: ScanRequest,
         typeSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
     ): ScanResponse<T> {
         val target = "DynamoDB_20120810.Scan"
         val configuration = DynamoDBConfiguration(region)
-        val requestSerializer = ScanRequest.serializer(typeSerializer)
+        val requestSerializer = ScanRequest.serializer()
         val responseSerializer = ScanResponse.serializer(typeSerializer)
         return request(configuration, request, headers, target, requestSerializer, responseSerializer)
     }
