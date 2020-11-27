@@ -40,10 +40,10 @@ class DynamoDBRequestHandler(
     }
     
     suspend fun <T> updateItem(
-        request: UpdateItemRequest<T>, 
+        request: UpdateItemRequest<T>,
         typeSerializer: KSerializer<T>,
         headers: List<Header> = emptyList(),
-    ) : UpdateItemResponse<T> {
+    ): UpdateItemResponse<T> {
         val target = "DynamoDB_20120810.UpdateItem"
         val configuration = DynamoDBConfiguration(region)
         val requestSerializer = UpdateItemRequest.serializer(typeSerializer)

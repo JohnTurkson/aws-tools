@@ -1,16 +1,15 @@
 package com.johnturkson.awstools.dynamodb.requestbuilder.requests
 
 import com.johnturkson.awstools.dynamodb.objectbuilder.DynamoDBObject
-import com.johnturkson.awstools.dynamodb.requestbuilder.serializers.UpdateItemRequestSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable(with = UpdateItemRequestSerializer::class)
+@Serializable
 data class UpdateItemRequest<T>(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("Key")
-    val key: T,
+    val key: DynamoDBObject,
     @SerialName("ReturnValues")
     val returnValues: String? = null,
     @SerialName("UpdateExpression")
