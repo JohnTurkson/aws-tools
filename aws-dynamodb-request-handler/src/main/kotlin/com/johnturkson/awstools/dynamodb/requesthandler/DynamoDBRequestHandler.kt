@@ -39,6 +39,18 @@ class DynamoDBRequestHandler(
         return request(configuration, request, headers, target, requestSerializer, responseSerializer)
     }
     
+    suspend fun <T> updateItem(
+        request: UpdateItemRequest<T>, 
+        typeSerializer: KSerializer<T>,
+        headers: List<Header> = emptyList(),
+    ) : UpdateItemResponse<T> {
+        val target = "DynamoDB_20120810.UpdateItem"
+        val configuration = DynamoDBConfiguration(region)
+        val requestSerializer = UpdateItemRequest.serializer(typeSerializer)
+        val responseSerializer = UpdateItemResponse.serializer(typeSerializer)
+        return request(configuration, request, headers, target, requestSerializer, responseSerializer)
+    }
+    
     suspend fun <T> deleteItem(
         request: DeleteItemRequest<T>,
         typeSerializer: KSerializer<T>,
