@@ -12,10 +12,10 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
 
 interface AWSRequestHandler {
+    val credentials: AWSCredentials
     val client: HttpClient
     
     suspend fun request(
-        credentials: AWSCredentials,
         configuration: AWSServiceConfiguration,
         body: String,
         headers: List<Header> = emptyList(),
