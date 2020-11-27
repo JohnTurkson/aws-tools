@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "com.johnturkson.aws-tools"
-    version = "0.0.31"
+    version = "0.0.32"
     
     repositories {
         mavenCentral()

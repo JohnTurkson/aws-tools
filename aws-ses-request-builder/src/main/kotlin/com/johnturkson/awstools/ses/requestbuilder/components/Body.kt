@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable(with = BodySerializer::class)
 sealed class Body {
     @Serializable
-    data class HtmlBody(@SerialName("Html") val html: Content) : Body()
+    data class TextBody(@SerialName("Text") val text: Content) : Body()
     
     @Serializable
-    data class TextBody(@SerialName("Text") val text: Content) : Body()
+    data class HtmlBody(@SerialName("Html") val html: Content) : Body()
 }
