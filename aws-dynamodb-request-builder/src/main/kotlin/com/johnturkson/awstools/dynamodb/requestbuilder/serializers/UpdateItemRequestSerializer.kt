@@ -19,8 +19,9 @@ class UpdateItemRequestSerializer<T>(private val dataSerializer: KSerializer<T>)
         val transformer = DynamoDBTransformingSerializer(dataSerializer)
         val json =  (encoder as JsonEncoder).json
         val tableName = JsonPrimitive(value.tableName)
-        val item = json.encodeToJsonElement(transformer, value.item)
+        val key = json.encodeToJsonElement(transformer, value.key)
         val returnValues = JsonPrimitive(value.returnValues)
+        val updateExpression = JsonPrimitive(value.updateExpression)
         val conditionExpression = JsonPrimitive(value.conditionExpression)
         val expressionAttributeNames = json.encodeToJsonElement(
             MapSerializer(String.serializer(), String.serializer()).nullable,
@@ -32,8 +33,9 @@ class UpdateItemRequestSerializer<T>(private val dataSerializer: KSerializer<T>)
         )
         val request = JsonObject(mapOf(
             "TableName" to tableName,
-            "Item" to item,
+            "Key" to key,
             "ReturnValues" to returnValues,
+            "UpdateExpression" to updateExpression,
             "ConditionExpression" to conditionExpression,
             "ExpressionAttributeNames" to expressionAttributeNames,
             "ExpressionAttributeValues" to expressionAttributeValues,
@@ -46,8 +48,9 @@ class UpdateItemRequestSerializer<T>(private val dataSerializer: KSerializer<T>)
         val json = (decoder as JsonDecoder).json
         val request = decoder.decodeJsonElement() as JsonObject
         val tableName = request["TableName"]!!.jsonPrimitive.content
-        val item = json.decodeFromJsonElement(transformer, request["Item"]!!)
+        val key = json.decodeFromJsonElement(transformer, request["Key"]!!)
         val returnValues = request["ReturnValues"]?.jsonPrimitive?.content
+        val updateExpression = request["UpdateExpression"]?.jsonPrimitive?.content
         val conditionExpression = request["ConditionExpression"]?.jsonPrimitive?.content
         val expressionAttributeNames = json.decodeFromJsonElement(
             MapSerializer(String.serializer(), String.serializer()).nullable,
@@ -59,8 +62,9 @@ class UpdateItemRequestSerializer<T>(private val dataSerializer: KSerializer<T>)
         )
         return UpdateItemRequest(
             tableName,
-            item,
+            key,
             returnValues,
+            updateExpression,
             conditionExpression,
             expressionAttributeNames,
             expressionAttributeValues,

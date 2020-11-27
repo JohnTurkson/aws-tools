@@ -9,10 +9,12 @@ import kotlinx.serialization.Serializable
 data class UpdateItemRequest<T>(
     @SerialName("TableName")
     val tableName: String,
-    @SerialName("Item")
-    val item: T,
+    @SerialName("Key")
+    val key: T,
     @SerialName("ReturnValues")
     val returnValues: String? = null,
+    @SerialName("UpdateExpression")
+    val updateExpression: String? = null,
     @SerialName("ConditionExpression")
     val conditionExpression: String? = null,
     @SerialName("ExpressionAttributeNames")
