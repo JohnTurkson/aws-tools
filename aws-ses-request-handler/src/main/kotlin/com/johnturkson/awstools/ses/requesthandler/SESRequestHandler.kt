@@ -18,8 +18,8 @@ class SESRequestHandler(
         request: SendEmailRequest,
         headers: List<Header> = emptyList(),
     ): SendEmailResponse {
-        val endpoint = "v2/email/outbound-emails"
-        val configuration = SESConfiguration(region, endpoint)
+        val path = "v2/email/outbound-emails"
+        val configuration = SESConfiguration(region, path)
         val body = serializer.encodeToString(SendEmailRequest.serializer(), request)
         val response = request(configuration, body, headers)
         return serializer.decodeFromString(SendEmailResponse.serializer(), response)

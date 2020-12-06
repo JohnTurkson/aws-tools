@@ -5,8 +5,7 @@ import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.HttpClient
 import io.ktor.client.request.headers
 import io.ktor.client.request.request
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.readText
+import io.ktor.client.statement.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.content.TextContent
@@ -33,13 +32,14 @@ interface AWSRequestHandler {
             combinedHeaders,
         )
         val response = client.request<HttpResponse>(configuration.url) {
-            this.body = TextContent(body, ContentType.Application.Json)
+            this.body = TextContent(body, ContentType("application", "x-amz-json-1.0"))
+            
             this.method = HttpMethod.parse(configuration.method)
             headers {
                 signedHeaders.forEach { (name, value) -> append(name, value) }
             }
         }
-        return response.readText()
+        return response.readBytes().map(Byte::toChar).joinToString(separator = "")
     }
     
     private fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
