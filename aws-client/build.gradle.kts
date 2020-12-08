@@ -10,5 +10,4 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:1.4.3")
     implementation(project(":aws-request-handler"))
     implementation(project(":aws-request-signer"))
-    implementation(project(":aws-client"))
 }
