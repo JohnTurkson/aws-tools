@@ -1,10 +1,10 @@
 package com.johnturkson.awstools.client.configuration
 
-open class AWSServiceConfiguration(
-    open val region: String,
-    open val path: String,
-    open val service: String,
-    open val endpoint: String,
-    open val url: String,
-    open val method: String,
-)
+interface AWSServiceConfiguration {
+    val region: String
+    val path: String
+    val service: String
+    val endpoint: String
+    val url: String
+    val method: String
+}

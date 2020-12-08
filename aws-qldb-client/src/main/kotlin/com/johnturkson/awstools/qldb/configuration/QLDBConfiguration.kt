@@ -9,4 +9,4 @@ data class QLDBConfiguration(
     override val endpoint: String = "https://session.qldb.$region.amazonaws.com",
     override val url: String = "$endpoint/$path",
     override val method: String = "POST",
-) : AWSServiceConfiguration(region, path, service, endpoint, url, method)
+) : AWSServiceConfiguration
