@@ -1,10 +1,10 @@
 package com.johnturkson.awstools.qldb.client
 
+import com.johnturkson.awstools.client.AWSClient
 import com.johnturkson.awstools.qldb.actions.StartSession
 import com.johnturkson.awstools.qldb.configuration.QLDBConfiguration
 import com.johnturkson.awstools.qldb.requests.StartSessionRequest
 import com.johnturkson.awstools.requesthandler.AWSCredentials
-import com.johnturkson.awstools.requesthandler.AWSRequestHandler
 import com.johnturkson.awstools.requesthandler.AWSServiceConfiguration
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.*
@@ -14,11 +14,11 @@ import kotlinx.serialization.json.JsonElement
 import java.security.MessageDigest
 
 class QLDBClient(
-    override val credentials: AWSCredentials,
-    override val client: HttpClient,
-    private val region: String,
-    private val serializer: Json
-) : AWSRequestHandler {
+    credentials: AWSCredentials? = null,
+    client: HttpClient? = null,
+    region: String? = null,
+    serializer: Json? = null,
+) : AWSClient(credentials, region, client, serializer) {
     
     suspend fun startSession(ledgerName: String, headers: List<Header> = emptyList()): String {
         val target = "QLDBSession.SendCommand"
@@ -26,7 +26,14 @@ class QLDBClient(
         val configuration = QLDBConfiguration(region, path)
         val request = StartSession(StartSessionRequest(ledgerName))
         val body = serializer.encodeToString(StartSession.serializer(), request)
-        val response = request(configuration, request, headers, target, StartSession.serializer(), JsonElement.serializer())
+        val response = request(
+            configuration,
+            request,
+            headers,
+            target,
+            StartSession.serializer(),
+            JsonElement.serializer(),
+        )
         return serializer.encodeToString(JsonElement.serializer(), response)
     }
     
