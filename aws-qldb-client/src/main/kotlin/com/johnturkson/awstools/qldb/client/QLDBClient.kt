@@ -19,8 +19,7 @@ class QLDBClient(
     
     suspend fun startSession(ledgerName: String): StartSessionResponse {
         val target = "QLDBSession.SendCommand"
-        val path = ""
-        val configuration = QLDBConfiguration(region, path)
+        val configuration = QLDBConfiguration(region)
         val request = StartSession(StartSessionRequest(ledgerName))
         val body = serializer.encodeToString(StartSession.serializer(), request)
         val headers = generateHeaders(target, body)
