@@ -4,52 +4,36 @@ import com.johnturkson.awstools.client.AWSClient
 import com.johnturkson.awstools.qldb.actions.StartSession
 import com.johnturkson.awstools.qldb.configuration.QLDBConfiguration
 import com.johnturkson.awstools.qldb.requests.StartSessionRequest
+import com.johnturkson.awstools.qldb.responses.StartSessionResponse
 import com.johnturkson.awstools.requesthandler.AWSCredentials
-import com.johnturkson.awstools.requesthandler.AWSServiceConfiguration
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.*
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
 import java.security.MessageDigest
 
 class QLDBClient(
     credentials: AWSCredentials? = null,
-    client: HttpClient? = null,
     region: String? = null,
+    client: HttpClient? = null,
     serializer: Json? = null,
 ) : AWSClient(credentials, region, client, serializer) {
     
-    suspend fun startSession(ledgerName: String, headers: List<Header> = emptyList()): String {
+    suspend fun startSession(ledgerName: String): StartSessionResponse {
         val target = "QLDBSession.SendCommand"
         val path = ""
         val configuration = QLDBConfiguration(region, path)
         val request = StartSession(StartSessionRequest(ledgerName))
         val body = serializer.encodeToString(StartSession.serializer(), request)
-        val response = request(
-            configuration,
-            request,
-            headers,
-            target,
-            StartSession.serializer(),
-            JsonElement.serializer(),
-        )
-        return serializer.encodeToString(JsonElement.serializer(), response)
+        val headers = generateHeaders(target, body)
+        val (statusCode, responseBody) = makeRequest(configuration, body, headers)
+        return when (statusCode) {
+            200 -> serializer.decodeFromString(StartSessionResponse.serializer(), responseBody)
+            else -> throw Exception()
+        }
     }
     
-    private suspend fun <T, R> request(
-        configuration: AWSServiceConfiguration,
-        request: T,
-        headers: List<Header>,
-        target: String,
-        requestSerializer: KSerializer<T>,
-        responseSerializer: KSerializer<R>,
-    ): R {
-        val body = serializer.encodeToString(requestSerializer, request)
-        val targetHeaders = generateTargetHeaders(target)
-        val contentHashHeaders = generateContentHashHeaders(body)
-        val response = request(configuration, body, headers + targetHeaders + contentHashHeaders)
-        return serializer.decodeFromString(responseSerializer, response)
+    private fun generateHeaders(target: String, body: String): List<Header> {
+        return generateTargetHeaders(target) + generateContentHashHeaders(body)
     }
     
     private fun generateTargetHeaders(target: String): List<Header> {
