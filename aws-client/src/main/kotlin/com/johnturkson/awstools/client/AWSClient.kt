@@ -1,9 +1,9 @@
 package com.johnturkson.awstools.client
 
+import com.johnturkson.awstools.client.configuration.AWSCredentials
+import com.johnturkson.awstools.client.configuration.AWSServiceConfiguration
 import com.johnturkson.awstools.client.configuration.SharedHttpClient
 import com.johnturkson.awstools.client.configuration.SharedJsonSerializer
-import com.johnturkson.awstools.requesthandler.AWSCredentials
-import com.johnturkson.awstools.requesthandler.AWSServiceConfiguration
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.*
@@ -13,6 +13,7 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.utils.io.*
 import kotlinx.serialization.json.Json
+import java.security.MessageDigest
 
 abstract class AWSClient(
     credentials: AWSCredentials? = null,
@@ -32,10 +33,8 @@ abstract class AWSClient(
     suspend fun makeRequest(
         configuration: AWSServiceConfiguration,
         body: String,
-        headers: List<Header> = emptyList(),
+        headers: List<Header>,
     ): Pair<Int, String> {
-        val credentialHeaders = generateCredentialHeaders(credentials)
-        val combinedHeaders = headers + credentialHeaders
         val signedHeaders = AWSRequestSigner.generateRequestHeaders(
             credentials.accessKeyId,
             credentials.secretKey,
@@ -44,20 +43,49 @@ abstract class AWSClient(
             configuration.method,
             configuration.url,
             body,
-            combinedHeaders,
+            headers,
         )
         val response = client.request<HttpResponse>(configuration.url) {
             this.body = TextContent(body, ContentType("application", "x-amz-json-1.0"))
             this.method = HttpMethod.parse(configuration.method)
             this.headers { signedHeaders.forEach { (name, value) -> append(name, value) } }
         }
-        return response.status.value to response.content.readRemaining().readText()
+        val statusCode = response.status.value
+        val responseBody = response.content.readRemaining().readText()
+        return Pair(statusCode, responseBody)
     }
     
-    private fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
+    fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
         return when (val sessionToken = credentials.sessionToken) {
             null -> emptyList()
             else -> listOf(Header("X-Amz-Security-Token", sessionToken))
         }
+    }
+    
+    fun generateTargetHeaders(target: String): List<Header> {
+        return listOf(Header("X-Amz-Target", target))
+    }
+    
+    fun generateContentHashHeaders(content: String): List<Header> {
+        fun ByteArray.toHex(): String {
+            return StringBuilder().also { builder ->
+                this.map { byte -> byte.toInt() }.forEach { bits ->
+                    val shift = 0x4
+                    val mask = 0xf
+                    val radix = 0x10
+                    val high = bits shr shift and mask
+                    val low = bits and mask
+                    builder.append(high.toString(radix))
+                    builder.append(low.toString(radix))
+                }
+            }.toString()
+        }
+        
+        fun String.hash(): String {
+            val algorithm = "SHA-256"
+            return MessageDigest.getInstance(algorithm).digest(this.toByteArray()).toHex()
+        }
+        
+        return listOf(Header("X-Amz-Content-Sha256", content.hash()))
     }
 }
