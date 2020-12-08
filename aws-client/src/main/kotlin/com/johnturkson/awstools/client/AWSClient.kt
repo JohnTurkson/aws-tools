@@ -1,13 +1,17 @@
 package com.johnturkson.awstools.client
 
+import com.johnturkson.awstools.client.configuration.SharedHttpClient
+import com.johnturkson.awstools.client.configuration.SharedJsonSerializer
 import com.johnturkson.awstools.requesthandler.AWSCredentials
 import com.johnturkson.awstools.requesthandler.AWSServiceConfiguration
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner
+import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.http.content.*
+import io.ktor.utils.io.*
 import kotlinx.serialization.json.Json
 
 abstract class AWSClient(
@@ -18,18 +22,18 @@ abstract class AWSClient(
 ) {
     protected val credentials: AWSCredentials = credentials ?: AWSCredentials(
         System.getenv("AWS_ACCESS_KEY_ID"),
-        System.getenv("AWS_SECRET_ACCCESS_KEY"),
+        System.getenv("AWS_SECRET_ACCESS_KEY"),
         System.getenv("AWS_SESSION_TOKEN"),
     )
     protected val region: String = region ?: System.getenv("AWS_REGION")
-    protected val client: HttpClient = client ?: HttpClient()
-    protected val serializer: Json = serializer ?: Json { ignoreUnknownKeys = true }
+    protected val client: HttpClient = client ?: SharedHttpClient.instance
+    protected val serializer: Json = serializer ?: SharedJsonSerializer.instance
     
-    suspend fun request(
+    suspend fun makeRequest(
         configuration: AWSServiceConfiguration,
         body: String,
-        headers: List<AWSRequestSigner.Header> = emptyList(),
-    ): String {
+        headers: List<Header> = emptyList(),
+    ): Pair<Int, String> {
         val credentialHeaders = generateCredentialHeaders(credentials)
         val combinedHeaders = headers + credentialHeaders
         val signedHeaders = AWSRequestSigner.generateRequestHeaders(
@@ -44,19 +48,16 @@ abstract class AWSClient(
         )
         val response = client.request<HttpResponse>(configuration.url) {
             this.body = TextContent(body, ContentType("application", "x-amz-json-1.0"))
-            
             this.method = HttpMethod.parse(configuration.method)
-            headers {
-                signedHeaders.forEach { (name, value) -> append(name, value) }
-            }
+            this.headers { signedHeaders.forEach { (name, value) -> append(name, value) } }
         }
-        return response.readBytes().map(Byte::toChar).joinToString(separator = "")
+        return response.status.value to response.content.readRemaining().readText()
     }
     
-    private fun generateCredentialHeaders(credentials: AWSCredentials): List<AWSRequestSigner.Header> {
+    private fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
         return when (val sessionToken = credentials.sessionToken) {
             null -> emptyList()
-            else -> listOf(AWSRequestSigner.Header("X-Amz-Security-Token", sessionToken))
+            else -> listOf(Header("X-Amz-Security-Token", sessionToken))
         }
     }
 }
