@@ -1,6 +1,6 @@
 package com.johnturkson.awstools.qldb.configuration
 
-import com.johnturkson.awstools.requesthandler.AWSServiceConfiguration
+import com.johnturkson.awstools.client.configuration.AWSServiceConfiguration
 
 data class QLDBConfiguration(
     override val region: String,
