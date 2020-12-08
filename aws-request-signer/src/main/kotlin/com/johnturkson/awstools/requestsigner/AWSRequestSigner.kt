@@ -44,8 +44,6 @@ object AWSRequestSigner {
         
         val authorizationHeader = generateAuthorizationHeader(accessKeyId, credentialScope, signedHeaders, signature)
         
-        println(authorizationHeader)
-        
         return headers + dateHeader + hostHeader + authorizationHeader
     }
     
