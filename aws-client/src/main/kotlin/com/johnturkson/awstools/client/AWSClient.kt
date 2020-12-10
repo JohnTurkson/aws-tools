@@ -1,9 +1,6 @@
 package com.johnturkson.awstools.client
 
-import com.johnturkson.awstools.client.configuration.AWSCredentials
-import com.johnturkson.awstools.client.configuration.AWSServiceConfiguration
-import com.johnturkson.awstools.client.configuration.SharedHttpClient
-import com.johnturkson.awstools.client.configuration.SharedJsonSerializer
+import com.johnturkson.awstools.client.configuration.*
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.*
