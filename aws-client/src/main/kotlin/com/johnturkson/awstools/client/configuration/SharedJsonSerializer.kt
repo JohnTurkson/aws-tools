@@ -7,6 +7,7 @@ object SharedJsonSerializer {
         Json {
             ignoreUnknownKeys = true
             encodeDefaults = false
+            classDiscriminator = "__type"
         }
     }
 }
