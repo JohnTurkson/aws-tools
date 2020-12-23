@@ -11,7 +11,7 @@ import com.johnturkson.awstools.qldb.requests.StartTransactionRequest
 import com.johnturkson.awstools.qldb.responses.StartSessionResponse
 import com.johnturkson.awstools.qldb.responses.StartTransactionResponse
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
-import io.ktor.client.*
+import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
