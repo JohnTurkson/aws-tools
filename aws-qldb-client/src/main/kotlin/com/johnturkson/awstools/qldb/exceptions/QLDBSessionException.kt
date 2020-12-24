@@ -1,4 +1,4 @@
-package com.johnturkson.awstools.qldb.errors
+package com.johnturkson.awstools.qldb.exceptions
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

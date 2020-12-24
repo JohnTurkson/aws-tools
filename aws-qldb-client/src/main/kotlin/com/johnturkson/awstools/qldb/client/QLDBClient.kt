@@ -7,13 +7,12 @@ import com.johnturkson.awstools.qldb.data.CommitTransactionRequestData
 import com.johnturkson.awstools.qldb.data.ExecuteStatementRequestData
 import com.johnturkson.awstools.qldb.data.StartSessionRequestData
 import com.johnturkson.awstools.qldb.data.StartTransactionRequestData
-import com.johnturkson.awstools.qldb.errors.QLDBSessionException
+import com.johnturkson.awstools.qldb.exceptions.QLDBSessionException
 import com.johnturkson.awstools.qldb.requests.CommitTransactionRequest
 import com.johnturkson.awstools.qldb.requests.ExecuteStatementRequest
 import com.johnturkson.awstools.qldb.requests.StartSessionRequest
 import com.johnturkson.awstools.qldb.requests.StartTransactionRequest
 import com.johnturkson.awstools.qldb.responses.*
-import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
 import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
@@ -35,19 +34,31 @@ class QLDBClient(
         return sendCommand(request)
     }
     
-    suspend fun commitTransaction(sessionToken: String, commitDigest: String, transactionId: String): CommitTransactionResponse {
+    suspend fun commitTransaction(
+        sessionToken: String,
+        commitDigest: String,
+        transactionId: String,
+    ): CommitTransactionResponse {
         val request = CommitTransactionRequest(sessionToken, CommitTransactionRequestData(commitDigest, transactionId))
         return sendCommand(request)
     }
     
-    suspend fun executeStatement(sessionToken: String, statement: String, transactionId: String): ExecuteStatementResponse {
+    suspend fun executeStatement(
+        sessionToken: String,
+        statement: String,
+        transactionId: String,
+    ): ExecuteStatementResponse {
         val request = ExecuteStatementRequest(sessionToken, ExecuteStatementRequestData(statement, transactionId))
         return sendCommand(request)
     }
     
     suspend fun getDigest(ledgerName: String): GetDigestResponse {
         val target = "QLDB"
-        val configuration = QLDBConfiguration(endpoint = "https://qldb.$region.amazonaws.com", path = "ledgers/$ledgerName/digest", region = region)
+        val configuration = QLDBConfiguration(
+            endpoint = "https://qldb.$region.amazonaws.com",
+            path = "ledgers/$ledgerName/digest",
+            region = region
+        )
         val body = ""
         val headers = generateHeaders(target, body)
         val (statusCode, responseBody) = makeRequest(configuration, body, headers)
@@ -63,14 +74,9 @@ class QLDBClient(
         val body = serializer.encodeToString(serializer(), request)
         val headers = generateHeaders(target, body)
         val (statusCode, responseBody) = makeRequest(configuration, body, headers)
-        println(responseBody)
         return when (statusCode) {
             200 -> serializer.decodeFromString(serializer(), responseBody)
             else -> throw serializer.decodeFromString(serializer<QLDBSessionException>(), responseBody)
         }
-    }
-    
-    private fun generateHeaders(target: String, body: String): List<Header> {
-        return generateCredentialHeaders(credentials) + generateTargetHeaders(target) + generateContentHashHeaders(body)
     }
 }

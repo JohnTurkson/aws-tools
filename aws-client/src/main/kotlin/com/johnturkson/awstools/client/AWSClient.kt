@@ -52,6 +52,10 @@ abstract class AWSClient(
         return Pair(statusCode, responseBody)
     }
     
+    fun generateHeaders(target: String, body: String): List<Header> {
+        return generateCredentialHeaders(credentials) + generateTargetHeaders(target) + generateContentHashHeaders(body)
+    }
+    
     fun generateCredentialHeaders(credentials: AWSCredentials): List<Header> {
         return when (val sessionToken = credentials.sessionToken) {
             null -> emptyList()
