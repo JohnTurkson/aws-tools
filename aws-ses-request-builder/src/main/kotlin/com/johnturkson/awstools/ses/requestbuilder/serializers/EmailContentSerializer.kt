@@ -8,15 +8,14 @@ import com.johnturkson.awstools.ses.requestbuilder.components.Template
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.SerialKind
-import kotlinx.serialization.descriptors.buildSerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 
 class EmailContentSerializer : KSerializer<EmailContent> {
     @InternalSerializationApi
-    override val descriptor: SerialDescriptor = buildSerialDescriptor("EmailContent", SerialKind.CONTEXTUAL) {
+    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("EmailContent") {
         element("Raw", RawEmailContent.serializer().descriptor)
         element("Simple", SimpleEmailContent.serializer().descriptor)
         element("Template", TemplateEmailContent.serializer().descriptor)
