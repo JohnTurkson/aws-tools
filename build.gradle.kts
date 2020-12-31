@@ -1,12 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.4.20" apply false
-    kotlin("plugin.serialization") version "1.4.20" apply false
+    kotlin("jvm") version "1.4.21" apply false
+    kotlin("plugin.serialization") version "1.4.21" apply false
     `maven-publish`
 }
 
 allprojects {
     group = "com.johnturkson.aws-tools"
-    version = "0.0.37"
+    version = "0.0.38"
     
     repositories {
         mavenCentral()
