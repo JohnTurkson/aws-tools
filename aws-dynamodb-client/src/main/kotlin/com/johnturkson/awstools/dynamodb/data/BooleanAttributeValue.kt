@@ -5,4 +5,4 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable(BooleanAttributeValueSerializer::class)
-data class BooleanAttributeValue(@SerialName("B") val value: Boolean)
+data class BooleanAttributeValue(@SerialName("BOOL") val value: Boolean)

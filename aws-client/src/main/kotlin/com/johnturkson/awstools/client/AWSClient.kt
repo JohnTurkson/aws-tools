@@ -1,14 +1,19 @@
 package com.johnturkson.awstools.client
 
-import com.johnturkson.awstools.client.configuration.*
+import com.johnturkson.awstools.client.configuration.AWSCredentials
+import com.johnturkson.awstools.client.configuration.AWSServiceConfiguration
+import com.johnturkson.awstools.client.configuration.SharedHttpClient
+import com.johnturkson.awstools.client.configuration.SharedJsonSerializer
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner
 import com.johnturkson.awstools.requestsigner.AWSRequestSigner.Header
-import io.ktor.client.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.utils.io.*
+import io.ktor.client.HttpClient
+import io.ktor.client.request.headers
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.http.content.TextContent
+import io.ktor.utils.io.readRemaining
 import kotlinx.serialization.json.Json
 import java.security.MessageDigest
 
@@ -18,14 +23,14 @@ abstract class AWSClient(
     client: HttpClient? = null,
     serializer: Json? = null,
 ) {
-    protected val credentials: AWSCredentials = credentials ?: AWSCredentials(
+    private val credentials: AWSCredentials = credentials ?: AWSCredentials(
         System.getenv("AWS_ACCESS_KEY_ID"),
         System.getenv("AWS_SECRET_ACCESS_KEY"),
         System.getenv("AWS_SESSION_TOKEN"),
     )
-    protected val region: String = region ?: System.getenv("AWS_REGION")
-    protected val client: HttpClient = client ?: SharedHttpClient.instance
-    protected val serializer: Json = serializer ?: SharedJsonSerializer.instance
+    private val client: HttpClient = client ?: SharedHttpClient.instance
+    val region: String = region ?: System.getenv("AWS_REGION")
+    val serializer: Json = serializer ?: SharedJsonSerializer.instance
     
     suspend fun makeRequest(
         configuration: AWSServiceConfiguration,

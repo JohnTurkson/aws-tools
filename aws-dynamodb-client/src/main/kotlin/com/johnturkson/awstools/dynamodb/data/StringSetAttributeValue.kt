@@ -5,4 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable(StringSetAttributeValueSerializer::class)
-data class StringSetAttributeValue(@SerialName("SS") val value: Set<String>)
+data class StringSetAttributeValue(@SerialName("SS") val values: Set<String>) {
+    constructor(vararg values: String): this(values.toSet())
+}

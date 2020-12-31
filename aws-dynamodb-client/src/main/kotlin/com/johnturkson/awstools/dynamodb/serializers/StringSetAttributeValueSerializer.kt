@@ -20,10 +20,10 @@ class StringSetAttributeValueSerializer : KSerializer<StringSetAttributeValue> {
     override fun serialize(encoder: Encoder, value: StringSetAttributeValue) {
         encoder.encodeStructure(descriptor) {
             encodeSerializableElement(
-                SetSerializer(String.serializer()).descriptor,
+                descriptor,
                 0,
                 SetSerializer(String.serializer()),
-                value.value
+                value.values
             )
         }
     }
@@ -32,7 +32,7 @@ class StringSetAttributeValueSerializer : KSerializer<StringSetAttributeValue> {
         return decoder.decodeStructure(descriptor) {
             when (val index = decodeElementIndex(descriptor)) {
                 0 -> StringSetAttributeValue(decodeSerializableElement(
-                    SetSerializer(String.serializer()).descriptor,
+                    descriptor,
                     index,
                     SetSerializer(String.serializer())
                 ))

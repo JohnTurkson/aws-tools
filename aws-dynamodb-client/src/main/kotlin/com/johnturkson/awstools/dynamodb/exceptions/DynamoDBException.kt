@@ -7,5 +7,4 @@ import kotlinx.serialization.Serializable
 sealed class DynamoDBException : Exception() {
     @SerialName("Message")
     abstract override val message: String
-    
 }

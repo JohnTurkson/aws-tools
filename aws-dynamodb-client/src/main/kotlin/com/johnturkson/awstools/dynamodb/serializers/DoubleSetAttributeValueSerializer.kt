@@ -23,7 +23,7 @@ class DoubleSetAttributeValueSerializer : KSerializer<DoubleSetAttributeValue> {
                 SetSerializer(String.serializer()).descriptor,
                 0,
                 SetSerializer(String.serializer()),
-                value.value.map { it.toString() }.toSet()
+                value.values.map { it.toString() }.toSet()
             )
         }
     }

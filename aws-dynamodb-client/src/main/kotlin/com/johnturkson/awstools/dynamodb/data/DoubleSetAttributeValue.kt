@@ -5,4 +5,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable(DoubleSetAttributeValueSerializer::class)
-class DoubleSetAttributeValue(@SerialName("NS") val value: Set<Double>)
+data class DoubleSetAttributeValue(@SerialName("NS") val values: Set<Double>) {
+    constructor(vararg values: Double): this(values.toSet())
+}

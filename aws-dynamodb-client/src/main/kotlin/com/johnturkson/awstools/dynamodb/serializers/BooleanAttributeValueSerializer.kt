@@ -13,7 +13,7 @@ import kotlinx.serialization.encoding.encodeStructure
 
 class BooleanAttributeValueSerializer : KSerializer<BooleanAttributeValue> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("BooleanAttributeValue") {
-        element<Boolean>("B")
+        element<Boolean>("BOOL")
     }
     
     override fun serialize(encoder: Encoder, value: BooleanAttributeValue) {
