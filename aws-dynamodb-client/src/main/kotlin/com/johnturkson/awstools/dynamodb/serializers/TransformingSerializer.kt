@@ -33,11 +33,12 @@ class TransformingSerializer<T>(private val dataSerializer: KSerializer<T>) : KS
     
     private fun wrapPrimitive(value: JsonPrimitive): JsonElement {
         return when {
+            value.isString -> JsonObject(mapOf("S" to JsonPrimitive(value.content)))
             value.booleanOrNull != null -> JsonObject(mapOf("BOOL" to JsonPrimitive(value.boolean)))
             value.intOrNull != null -> JsonObject(mapOf("N" to JsonPrimitive(value.int.toString())))
             value.doubleOrNull != null -> JsonObject(mapOf("N" to JsonPrimitive(value.double.toString())))
             // TODO other types
-            else -> JsonObject(mapOf("S" to JsonPrimitive(value.content)))
+            else -> throw Exception("Unknown type when attempting to parse primitive value")
         }
     }
     
