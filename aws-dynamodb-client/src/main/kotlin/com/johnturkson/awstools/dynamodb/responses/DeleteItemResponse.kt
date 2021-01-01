@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DeleteItemResponse<T>(
     @SerialName("Attributes")
-    val item: T? = null,
+    val attributes: T? = null,
 )

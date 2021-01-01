@@ -5,11 +5,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateItemRequest<K>(
+data class UpdateItemRequest<T>(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("Key")
-    val key: K,
+    val key: T,
     @SerialName("ReturnValues")
     val returnValues: String? = null,
     @SerialName("UpdateExpression")

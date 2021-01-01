@@ -1,5 +1,6 @@
 package com.johnturkson.awstools.dynamodb.requests
 
+import com.johnturkson.awstools.dynamodb.data.AttributeValueMap
 import com.johnturkson.awstools.dynamodb.data.ProjectionExpression
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,7 +20,7 @@ data class QueryRequest<K>(
     @SerialName("ExpressionAttributeNames")
     val expressionAttributeNames: Map<String, String>? = null,
     @SerialName("ExpressionAttributeValues")
-    val expressionAttributeValues: K? = null,
+    val expressionAttributeValues: AttributeValueMap? = null,
     @SerialName("ProjectionExpression")
     val projectionExpression: ProjectionExpression? = null,
     @SerialName("FilterExpression")

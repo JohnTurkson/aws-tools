@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetItemRequest<K>(
+data class GetItemRequest<T>(
     @SerialName("TableName")
     val tableName: String,
     @SerialName("Key")
-    val key: K,
+    val key: T,
     @SerialName("ExpressionAttributeNames")
     val expressionAttributeNames: Map<String, String>? = null,
     @SerialName("ProjectionExpression")

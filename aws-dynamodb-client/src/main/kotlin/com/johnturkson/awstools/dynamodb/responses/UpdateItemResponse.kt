@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UpdateItemResponse<T>(
     @SerialName("Attributes")
-    val item: T? = null,
+    val attributes: T? = null,
 )
