@@ -73,7 +73,7 @@ abstract class AWSClient(
     }
     
     fun generateContentHashHeaders(content: String): List<Header> {
-        fun ByteArray.toHex(): String {
+        fun ByteArray.toHexString(): String {
             return StringBuilder().also { builder ->
                 this.map { byte -> byte.toInt() }.forEach { bits ->
                     val shift = 0x4
@@ -89,7 +89,7 @@ abstract class AWSClient(
         
         fun String.hash(): String {
             val algorithm = "SHA-256"
-            return MessageDigest.getInstance(algorithm).digest(this.toByteArray()).toHex()
+            return MessageDigest.getInstance(algorithm).digest(this.toByteArray()).toHexString()
         }
         
         return listOf(Header("X-Amz-Content-Sha256", content.hash()))

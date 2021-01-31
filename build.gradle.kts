@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.johnturkson.aws-tools"
+    group = "com.johnturkson.tools"
     version = "0.0.41"
     
     repositories {

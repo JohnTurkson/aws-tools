@@ -24,7 +24,7 @@ object AWSRequestSigner {
         
         val canonicalHeaders = generateCanonicalHeaders(headers + dateHeader + hostHeader)
         val signedHeaders = generateSignedHeaders(headers + dateHeader + hostHeader)
-        val hashedPayload = computeSHA256(body.toByteArray()).toHex()
+        val hashedPayload = computeSHA256(body.toByteArray()).toHexString()
         
         val canonicalUri = generateCanonicalUri(url)
         val canonicalQueryString = generateCanonicalQueryString(url)
@@ -171,7 +171,7 @@ object AWSRequestSigner {
     }
     
     private fun hash(data: String): String {
-        return computeSHA256(data.toByteArray()).toHex()
+        return computeSHA256(data.toByteArray()).toHexString()
     }
     
     private fun generateCredentialScope(date: String, region: String, service: String): String {
@@ -202,7 +202,7 @@ object AWSRequestSigner {
         val signingService = sign(signingRegion, service)
         val signingKey = sign(signingService, termination)
         val signature = sign(signingKey, stringToSign)
-        return signature.toHex()
+        return signature.toHexString()
     }
     
     private fun sign(key: String, data: String): ByteArray {
@@ -220,12 +220,10 @@ object AWSRequestSigner {
     
     private fun computeHMACSHA256(key: ByteArray, data: ByteArray): ByteArray {
         val algorithm = "HmacSHA256"
-        return Mac.getInstance(algorithm).apply {
-            init(SecretKeySpec(key, algorithm))
-        }.doFinal(data)
+        return Mac.getInstance(algorithm).apply { init(SecretKeySpec(key, algorithm)) }.doFinal(data)
     }
     
-    private fun ByteArray.toHex(): String {
+    private fun ByteArray.toHexString(): String {
         return StringBuilder().also { builder ->
             this.map { byte -> byte.toInt() }.forEach { bits ->
                 val shift = 0x4
