@@ -1,22 +1,23 @@
-package com.johnturkson.awstools.lambda.data
+package com.johnturkson.aws.lambda.client
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler
+import com.johnturkson.aws.lambda.data.HttpRequest
+import com.johnturkson.aws.lambda.data.HttpResponse
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.Base64
 
 interface HttpLambdaFunction<T, R> : RequestStreamHandler {
     val serializer: Json
     
     override fun handleRequest(input: InputStream, output: OutputStream, context: Context) {
         val request = input.bufferedReader().use { reader -> reader.readText() }
-        val response = handle(request)
+        val response = handleInput(request)
         output.bufferedWriter().use { writer -> writer.write(response) }
     }
     
-    fun handle(input: String): String {
+    fun handleInput(input: String): String {
         val httpRequest = runCatching {
             decodeHttpRequest(input)
         }.getOrElse { exception ->
@@ -24,23 +25,25 @@ interface HttpLambdaFunction<T, R> : RequestStreamHandler {
             return encodeHttpResponse(response)
         }
         
+        val httpResponse = handleHttpRequest(httpRequest)
+        return encodeHttpResponse(httpResponse)
+    }
+    
+    fun handleHttpRequest(httpRequest: HttpRequest): HttpResponse {
         runCatching {
             verifyAuthorization(httpRequest)
         }.getOrElse { exception ->
-            val response = onInvalidAuthorization(httpRequest, exception)
-            return encodeHttpResponse(response)
+            return onInvalidAuthorization(httpRequest, exception)
         }
         
         val typedRequest = runCatching {
             decodeTypedRequest(httpRequest)
         }.getOrElse { exception ->
-            val response = onInvalidTypedRequest(httpRequest, exception)
-            return encodeHttpResponse(response)
+            return onInvalidTypedRequest(httpRequest, exception)
         }
         
         val typedResponse = processTypedRequest(typedRequest)
-        val httpResponse = encodeTypedResponse(typedResponse)
-        return encodeHttpResponse(httpResponse)
+        return encodeTypedResponse(typedResponse)
     }
     
     fun decodeHttpRequest(input: String): HttpRequest {
@@ -63,13 +66,5 @@ interface HttpLambdaFunction<T, R> : RequestStreamHandler {
     
     fun encodeHttpResponse(response: HttpResponse): String {
         return serializer.encodeToString(HttpResponse.serializer(), response)
-    }
-    
-    fun HttpRequest.decodeBody(): String? {
-        return when {
-            body == null -> null
-            isBase64Encoded -> Base64.getDecoder().decode(body).decodeToString()
-            else -> body
-        }
     }
 }

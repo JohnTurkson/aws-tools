@@ -1,4 +1,4 @@
-package com.johnturkson.awstools.lambda.data
+package com.johnturkson.aws.lambda.data
 
 import kotlinx.serialization.Serializable
 
