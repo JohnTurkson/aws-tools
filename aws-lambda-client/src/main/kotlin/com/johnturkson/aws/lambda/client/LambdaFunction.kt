@@ -1,4 +1,4 @@
-package com.johnturkson.awstools.lambda.data
+package com.johnturkson.aws.lambda.client
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler
@@ -26,16 +26,18 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
             return encodeOutput(response)
         }
         
+        val response = handleRequest(request)
+        return encodeOutput(response)
+    }
+    
+    fun handleRequest(request: T): R {
         runCatching {
             checkRequestAuthorization(request)
         }.getOrElse { exception ->
-            val response = handleInvalidRequestAuthorization(request, exception)
-            return encodeOutput(response)
+            return handleInvalidRequestAuthorization(request, exception)
         }
         
-        val response = processRequest(request)
-        
-        return encodeOutput(response)
+        return processRequest(request)
     }
     
     fun decodeInput(input: String): T {
