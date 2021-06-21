@@ -4,6 +4,7 @@ import java.net.URL
 import java.security.MessageDigest
 import java.time.Instant
 import java.time.ZoneOffset
+import java.util.Locale
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -137,7 +138,7 @@ object AWSRequestSigner {
     private fun generateCanonicalHeaders(headers: List<Header>): String {
         return headers.asSequence()
             .map { (name, value) -> name to value }
-            .groupBy { (name, _) -> name.toLowerCase() }
+            .groupBy { (name, _) -> name.lowercase(Locale.ROOT) }
             .mapValues { (_, values) -> values.map { (_, value) -> value } }
             .map { (name, values) -> name to values }
             .sortedBy { (name, _) -> name }
@@ -148,7 +149,7 @@ object AWSRequestSigner {
     private fun generateSignedHeaders(headers: List<Header>): String {
         return headers.asSequence()
             .map { (name, value) -> name to value }
-            .map { (name, _) -> name.toLowerCase() }
+            .map { (name, _) -> name.lowercase(Locale.ROOT) }
             .distinct()
             .sorted()
             .joinToString(separator = ";")
