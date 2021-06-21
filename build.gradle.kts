@@ -1,12 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.4.21" apply false
-    kotlin("plugin.serialization") version "1.4.21" apply false
+    kotlin("jvm") version "1.5.10" apply false
+    kotlin("plugin.serialization") version "1.5.10" apply false
     `maven-publish`
 }
 
 allprojects {
-    group = "com.johnturkson.aws-tools"
-    version = "0.0.41"
+    group = "com.johnturkson.aws"
+    version = "0.0.2"
     
     repositories {
         mavenCentral()
@@ -55,20 +55,14 @@ subprojects {
         
         repositories {
             maven {
-                name = "SpacePackages"
-                url = uri("https://maven.pkg.jetbrains.space/johnturkson/p/packages/public")
-                credentials {
-                    username = System.getenv("SPACE_PUBLISHING_USERNAME")
-                    password = System.getenv("SPACE_PUBLISHING_TOKEN")
+                name = "GitLabPackages"
+                url = uri("https://gitlab.com/api/v4/projects/${System.getenv("GITLAB_PROJECT_ID")}/packages/maven")
+                authentication {
+                    create<HttpHeaderAuthentication>("header")
                 }
-            }
-            
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/johnturkson/aws-tools")
-                credentials {
-                    username = System.getenv("GITHUB_PUBLISHING_USERNAME")
-                    password = System.getenv("GITHUB_PUBLISHING_TOKEN")
+                credentials(HttpHeaderCredentials::class) {
+                    name = "Deploy-Token"
+                    value = System.getenv("GITLAB_PUBLISHING_TOKEN")
                 }
             }
         }
