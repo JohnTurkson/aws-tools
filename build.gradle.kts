@@ -1,12 +1,13 @@
 plugins {
     kotlin("jvm") version "1.5.10" apply false
     kotlin("plugin.serialization") version "1.5.10" apply false
+    `java-library`
     `maven-publish`
 }
 
 allprojects {
     group = "com.johnturkson.aws"
-    version = "0.0.2"
+    version = "0.0.3"
     
     repositories {
         mavenCentral()
@@ -14,7 +15,13 @@ allprojects {
 }
 
 subprojects {
+    apply(plugin = "java-library")
     apply(plugin = "maven-publish")
+    
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
     
     publishing {
         publications {
@@ -48,7 +55,7 @@ subprojects {
                 }
                 
                 afterEvaluate {
-                    from(components["kotlin"])
+                    from(components["java"])
                 }
             }
         }
