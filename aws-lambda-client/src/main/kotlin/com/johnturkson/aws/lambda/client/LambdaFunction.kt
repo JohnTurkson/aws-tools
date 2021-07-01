@@ -2,6 +2,10 @@ package com.johnturkson.aws.lambda.client
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler
+import com.johnturkson.aws.lambda.v2.LambdaRequest
+import com.johnturkson.aws.lambda.v2.LambdaRequest.*
+import com.johnturkson.aws.lambda.v2.LambdaResponse
+import com.johnturkson.aws.lambda.v2.LambdaResponse.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import java.io.InputStream
@@ -19,40 +23,66 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
     }
     
     fun handle(input: String): String {
+        // TODO attempt to get context
+        
+        // TODO parse directly to LambdaRequest
         val request = runCatching {
             decodeInput(input)
         }.getOrElse { exception ->
-            val response = handleInvalidInput(input, exception)
+            val response = onError(input, exception)
             return encodeOutput(response)
         }
         
-        val response = handleRequest(request)
+        val re = decodeRequest() // TODO
+        val res = processRequest(re)
+        
+        val response = encodeResponse(request, res)
+        
         return encodeOutput(response)
     }
     
-    fun handleRequest(request: T): R {
-        runCatching {
-            checkRequestAuthorization(request)
-        }.getOrElse { exception ->
-            return handleInvalidRequestAuthorization(request, exception)
-        }
+    fun decodeInput(input: String): LambdaRequest {
+        // json content polymorphic serialization
         
-        return processRequest(request)
+        // return serializer.decodeFromString(requestSerializer, input)
+        TODO()
     }
     
-    fun decodeInput(input: String): T {
-        return serializer.decodeFromString(requestSerializer, input)
+    fun decodeRequest(body: String?): T {
+        TODO()
     }
     
-    fun handleInvalidInput(input: String, exception: Throwable): R
-    
-    fun checkRequestAuthorization(request: T)
-    
-    fun handleInvalidRequestAuthorization(request: T, exception: Throwable): R
+    // unknown input type (could not be coerced)
+    fun onError(input: String, exception: Throwable): LambdaResponse
     
     fun processRequest(request: T): R
     
-    fun encodeOutput(response: R): String {
-        return serializer.encodeToString(responseSerializer, response)
+    fun encodeRawResponse(response: R): RawLambdaResponse {
+        val body = serializer.encodeToString(responseSerializer, response)
+        return RawLambdaResponse(body)
+    }
+    
+    fun encodeHttpResponse(response: R): HttpLambdaResponse {
+        throw NotImplementedError()
+    }
+    
+    fun encodeWebsocketResponse(response: R): WebsocketLambdaResponse {
+        throw NotImplementedError()
+    }
+    
+    fun encodeResponse(request: LambdaRequest, response: R): LambdaResponse {
+        return when (request) {
+            is RawLambdaRequest -> encodeRawResponse(response)
+            is HttpLambdaRequest -> encodeHttpResponse(response)
+            is WebsocketLambdaRequest -> encodeWebsocketResponse(response)
+        }
+    }
+    
+    fun encodeOutput(response: LambdaResponse): String {
+        return when (response) {
+            is RawLambdaResponse -> response.body
+            is HttpLambdaResponse -> serializer.encodeToString(HttpLambdaResponse.serializer(), response)
+            is WebsocketLambdaResponse -> response.body
+        }
     }
 }
