@@ -2,9 +2,9 @@ package com.johnturkson.aws.lambda.client
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler
+import com.johnturkson.aws.lambda.data.LambdaDeserializer
 import com.johnturkson.aws.lambda.data.LambdaRequest
 import com.johnturkson.aws.lambda.data.LambdaResponse
-import com.johnturkson.aws.lambda.data.LambdaSerializer
 import com.johnturkson.aws.lambda.data.decodeBody
 import com.johnturkson.aws.lambda.data.http.HttpLambdaRequest
 import com.johnturkson.aws.lambda.data.http.HttpLambdaResponse
@@ -37,7 +37,7 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
     }
     
     fun decodeInput(input: String): LambdaRequest {
-        return serializer.decodeFromString(LambdaSerializer, input)
+        return serializer.decodeFromString(LambdaDeserializer, input)
     }
     
     fun decodeRequest(request: LambdaRequest): T? {
