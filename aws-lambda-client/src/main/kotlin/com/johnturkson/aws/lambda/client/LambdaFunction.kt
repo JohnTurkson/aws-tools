@@ -37,7 +37,7 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
     }
     
     fun decodeInput(input: String): LambdaRequest {
-        return serializer.decodeFromString(LambdaDeserializer, input)
+        return LambdaJsonSerializer.instance.decodeFromString(LambdaDeserializer, input)
     }
     
     fun decodeRequest(request: LambdaRequest): T? {
@@ -55,6 +55,14 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
     
     fun processRequest(request: T?): R
     
+    fun encodeResponse(request: LambdaRequest, response: R): LambdaResponse {
+        return when (request) {
+            is HttpLambdaRequest -> encodeHttpResponse(response)
+            is WebsocketLambdaRequest -> encodeWebsocketResponse(response)
+            else -> encodeRawResponse(response)
+        }
+    }
+    
     fun encodeRawResponse(response: R): RawLambdaResponse {
         val body = serializer.encodeToString(responseSerializer, response)
         return RawLambdaResponse(body)
@@ -70,18 +78,16 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
         return WebsocketLambdaResponse(body)
     }
     
-    fun encodeResponse(request: LambdaRequest, response: R): LambdaResponse {
-        return when (request) {
-            is HttpLambdaRequest -> encodeHttpResponse(response)
-            is WebsocketLambdaRequest -> encodeWebsocketResponse(response)
-            else -> encodeRawResponse(response)
-        }
-    }
-    
     fun encodeOutput(response: LambdaResponse): String {
         return when (response) {
-            is HttpLambdaResponse -> serializer.encodeToString(HttpLambdaResponse.serializer(), response)
-            is WebsocketLambdaResponse -> serializer.encodeToString(WebsocketLambdaResponse.serializer(), response)
+            is HttpLambdaResponse -> LambdaJsonSerializer.instance.encodeToString(
+                HttpLambdaResponse.serializer(),
+                response
+            )
+            is WebsocketLambdaResponse -> LambdaJsonSerializer.instance.encodeToString(
+                WebsocketLambdaResponse.serializer(),
+                response
+            )
             else -> response.body
         }
     }
