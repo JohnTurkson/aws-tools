@@ -6,7 +6,7 @@ object LambdaJsonSerializer {
     val instance by lazy {
         Json {
             ignoreUnknownKeys = true
-            encodeDefaults = false
+            encodeDefaults = true
         }
     }
 }
