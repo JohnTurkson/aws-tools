@@ -1,9 +1,9 @@
-package com.johnturkson.aws.lambda.data
+package com.johnturkson.aws.lambda.data.http
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HttpRequestContextMetadata(
+data class HttpLambdaRequestContextMetadata(
     val method: String,
     val path: String,
     val protocol: String,
