@@ -81,7 +81,7 @@ interface LambdaFunction<T, R> : RequestStreamHandler {
     fun encodeOutput(response: LambdaResponse): String {
         return when (response) {
             is HttpLambdaResponse -> serializer.encodeToString(HttpLambdaResponse.serializer(), response)
-            is WebsocketLambdaResponse -> response.body
+            is WebsocketLambdaResponse -> serializer.encodeToString(WebsocketLambdaResponse.serializer(), response)
             else -> response.body
         }
     }

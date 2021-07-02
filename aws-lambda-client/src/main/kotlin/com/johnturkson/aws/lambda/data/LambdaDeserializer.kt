@@ -5,7 +5,6 @@ import com.johnturkson.aws.lambda.data.raw.RawLambdaRequest
 import com.johnturkson.aws.lambda.data.websocket.WebsocketLambdaRequest
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -23,8 +22,8 @@ object LambdaDeserializer : DeserializationStrategy<LambdaRequest> {
     )
     
     @InternalSerializationApi
-    override val descriptor = buildSerialDescriptor("LambdaRequest", PolymorphicKind.OPEN) {
-        element("RawLambdaRequest", String.serializer().descriptor)
+    override val descriptor = buildSerialDescriptor("LambdaRequest", PolymorphicKind.SEALED) {
+        element("RawLambdaRequest", RawLambdaRequest.serializer().descriptor)
         element("HttpLambdaRequest", HttpLambdaRequest.serializer().descriptor)
         element("WebsocketLambdaRequest", WebsocketLambdaRequest.serializer().descriptor)
     }
