@@ -18,64 +18,86 @@ class DynamoDBClient(
     client: HttpClient? = null,
     serializer: Json? = null,
 ) : AWSClient(credentials, region, client, serializer) {
-    
-    suspend inline fun <reified T> putItem(request: PutItemRequest<T>): PutItemResponse<T> {
+    suspend inline fun <reified T> putItem(
+        request: PutItemRequest<T>,
+        dataSerializer: KSerializer<T> = serializer(),
+    ): PutItemResponse<T> {
         val target = "DynamoDB_20120810.PutItem"
         return request(
             target,
             request,
-            PutItemRequestSerializer(serializer()),
-            PutItemResponseSerializer(serializer()),
+            PutItemRequestSerializer(dataSerializer),
+            PutItemResponseSerializer(dataSerializer),
         )
     }
     
-    suspend inline fun <reified K, reified T> getItem(request: GetItemRequest<K>): GetItemResponse<T> {
+    suspend inline fun <reified K, reified T> getItem(
+        request: GetItemRequest<K>,
+        keySerializer: KSerializer<K> = serializer(),
+        dataSerializer: KSerializer<T> = serializer(),
+    ): GetItemResponse<T> {
         val target = "DynamoDB_20120810.GetItem"
         return request(
             target,
             request,
-            GetItemRequestSerializer(serializer()),
-            GetItemResponseSerializer(serializer()),
+            GetItemRequestSerializer(keySerializer),
+            GetItemResponseSerializer(dataSerializer),
         )
     }
     
-    suspend inline fun <reified K, reified T> updateItem(request: UpdateItemRequest<K>): UpdateItemResponse<T> {
+    suspend inline fun <reified K, reified T> updateItem(
+        request: UpdateItemRequest<K>,
+        keySerializer: KSerializer<K>,
+        dataSerializer: KSerializer<T>,
+    ): UpdateItemResponse<T> {
         val target = "DynamoDB_20120810.UpdateItem"
         return request(
             target,
             request,
-            UpdateItemRequestSerializer(serializer()),
-            UpdateItemResponseSerializer(serializer()),
+            UpdateItemRequestSerializer(keySerializer),
+            UpdateItemResponseSerializer(dataSerializer),
         )
     }
     
-    suspend inline fun <reified K, reified T> deleteItem(request: DeleteItemRequest<K>): DeleteItemResponse<T> {
+    suspend inline fun <reified K, reified T> deleteItem(
+        request: DeleteItemRequest<K>,
+        keySerializer: KSerializer<K> = serializer(),
+        dataSerializer: KSerializer<T> = serializer(),
+    ): DeleteItemResponse<T> {
         val target = "DynamoDB_20120810.DeleteItem"
         return request(
             target,
             request,
-            DeleteItemRequestSerializer(serializer()),
-            DeleteItemResponseSerializer(serializer()),
+            DeleteItemRequestSerializer(keySerializer),
+            DeleteItemResponseSerializer(dataSerializer),
         )
     }
     
-    suspend inline fun <reified K, reified T> query(request: QueryRequest<K>): QueryResponse<K, T> {
+    suspend inline fun <reified K, reified T> query(
+        request: QueryRequest<K>,
+        keySerializer: KSerializer<K>,
+        dataSerializer: KSerializer<T>,
+    ): QueryResponse<K, T> {
         val target = "DynamoDB_20120810.Query"
         return request(
             target,
             request,
-            QueryRequestSerializer(serializer()),
-            QueryResponseSerializer(serializer(), serializer()),
+            QueryRequestSerializer(keySerializer),
+            QueryResponseSerializer(keySerializer, dataSerializer),
         )
     }
     
-    suspend inline fun <reified K, reified T> scan(request: ScanRequest<K>): ScanResponse<K, T> {
+    suspend inline fun <reified K, reified T> scan(
+        request: ScanRequest<K>,
+        keySerializer: KSerializer<K>,
+        dataSerializer: KSerializer<T>,
+    ): ScanResponse<K, T> {
         val target = "DynamoDB_20120810.Scan"
         return request(
             target,
             request,
-            ScanRequestSerializer(serializer()),
-            ScanResponseSerializer(serializer(), serializer()),
+            ScanRequestSerializer(keySerializer),
+            ScanResponseSerializer(keySerializer, dataSerializer),
         )
     }
     
